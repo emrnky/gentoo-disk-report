@@ -24,16 +24,16 @@
 #           "var/log/rsync.log" 2026-9-17-11:0:0
 #
 # Browser Cache 
-
+shopt -s extglob
 cache=(
     "$HOME/.cache/*" 
-    #"$HOME/.thumbnails/"
+    "$HOME/.thumbnails/*"
     # eclean 
-    #"/var/cache/binpkgs/"
-    #"/var/cache/distfiles/"
+    "/var/cache/binpkgs/"
+    "/var/cache/distfiles/"
     # eclean-kernel 
-    #"/lib/modules/"
-    #"/usr/src/"   
+    "/lib/modules/"
+    "/usr/src/"   
 )
 
 clear
@@ -43,9 +43,17 @@ getLogPath() {
 }
 
 mapfile -t -O "${#cache[@]}" cache < <(getLogPath)
+expandCache() {
+    for entry in "${cache[@]}"; do
+        for match in $entry; do
+            [ -e "$match" ] && echo "$match"
+        done
+    done
+}
+
+mapfile -t cache < <(expandCache)  
 
 getDirSize() {
     du -c -h --max-depth=1 "${cache[@]}"
 }
-
 getDirSize
