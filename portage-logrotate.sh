@@ -1,0 +1,23 @@
+# /etc/logrotate.d/portage
+
+/var/log/emerge-fetch.log {
+    createolddir 755 portage portage
+    olddir /var/log/portage/old
+    su portage portage
+    copytruncate
+    missingok
+}
+
+/var/log/emerge.log {
+    createolddir 755 portage portage
+    olddir /var/log/portage/old
+    su portage portage
+    copytruncate
+    missingok
+}
+
+/var/log/portage/*.log {
+    su portage portage
+    missingok
+    nocreate
+}
