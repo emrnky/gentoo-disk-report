@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Safe to remove dirs in gentoo : https://wiki.gentoo.org/wiki/Knowledge_Base:Freeing_disk_space
 # 
 #
@@ -23,37 +23,29 @@
 #       format : 
 #           "var/log/rsync.log" 2026-9-17-11:0:0
 #
-# Browser Cache 
+# Browser Cache
+# Install tool later 
 shopt -s extglob
-cache=(
-    "$HOME/.cache/*" 
-    "$HOME/.thumbnails/*"
-    # eclean 
-    "/var/cache/binpkgs/"
-    "/var/cache/distfiles/"
-    # eclean-kernel 
-    "/lib/modules/"
-    "/usr/src/"   
-)
-
+source "src/paths.sh"
 clear
 
 getLogPath() {
     sudo cat /var/lib/misc/logrotate.status | awk -F'"' '{print $2}'
 }
 
-mapfile -t -O "${#cache[@]}" cache < <(getLogPath)
-expandCache() {
-    for entry in "${cache[@]}"; do
+mapfile -t -O "${#scanPaths[@]}" scanPaths < <(getLogPath)
+
+expandGlob() {
+    for entry in "${scanPaths[@]}"; do
         for match in $entry; do
             [ -e "$match" ] && echo "$match"
         done
     done
 }
 
-mapfile -t cache < <(expandCache)  
+mapfile -t scanPaths < <(expandGlob)  
 
 getDirSize() {
-    du -c -h --max-depth=1 "${cache[@]}"
+    du -c -h -d 0 "${scanPaths[@]}"
 }
 getDirSize
