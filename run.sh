@@ -24,27 +24,10 @@
 #           "var/log/rsync.log" 2026-9-17-11:0:0
 #
 # Browser Cache
-# Install tool later 
-shopt -s extglob
+# Install tool later [done] 
 source "src/paths.sh"
+
 clear
-
-getLogPath() {
-    sudo cat /var/lib/misc/logrotate.status | awk -F'"' '{print $2}'
-}
-
-mapfile -t -O "${#scanPaths[@]}" scanPaths < <(getLogPath)
-
-expandGlob() {
-    for entry in "${scanPaths[@]}"; do
-        for match in $entry; do
-            [ -e "$match" ] && echo "$match"
-        done
-    done
-}
-
-mapfile -t scanPaths < <(expandGlob)  
-
 getDirSize() {
     du -c -h -d 0 "${scanPaths[@]}"
 }
