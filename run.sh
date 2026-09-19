@@ -25,10 +25,5 @@
 #
 # Browser Cache
 # Install tool later [done] 
-source "src/paths.sh"
-
 clear
-getDirSize() {
-    du -c -h -d 0 "${scanPaths[@]}"
-}
-getDirSize
+src/print-summary.sh

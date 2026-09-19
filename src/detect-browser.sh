@@ -16,6 +16,6 @@ for i in "${!browserNames[@]}"; do
     sizes+=("$(numfmt --to=iec --format='%.1f' "${cacheBytes[i]}")")
 done
 
-for i in "${!browserNames[@]}"; do
-    printf '%-20s %-20s %s\n' "${scripts[i]}" "${browserNames[i]}" "${sizes[i]}"
-done
+# for i in "${!browserNames[@]}"; do
+#     printf '%-20s %-20s %s\n' "${scripts[i]}" "${browserNames[i]}" "${sizes[i]}"
+# done
