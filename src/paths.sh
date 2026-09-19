@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "src/detect-logs.sh"
+source "src/detect-logrotate.sh"
 
 shopt -s nullglob extglob
 

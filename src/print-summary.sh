@@ -8,6 +8,8 @@ source "src/common.sh"
 
 grandTotal=0
 
+grandTotal=$((grandTotal + journaldCache))
+
 getDirSize() {
     local -n arr_ref="$1"
     (( ${#arr_ref[@]} == 0 )) && return
