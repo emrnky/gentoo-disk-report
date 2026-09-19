@@ -11,8 +11,8 @@
 #
 #   /var/tmp/portage/ 
 #   for above nothing handles it
-#   safe to remove appearently
-#
+#   not sure to remove - search it more
+#  
 # logrotate
 #   running - logrotate -v /etc/logrotate.conf
 #   it will run all dirs given in :
