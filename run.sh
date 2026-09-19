@@ -27,3 +27,5 @@
 # Install tool later [done] 
 clear
 src/print-summary.sh
+echo ; echo 
+src/print-disk-usage.sh

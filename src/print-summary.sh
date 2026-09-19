@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 source "src/paths.sh"
 source "src/detect-browser.sh"
+source "src/colors.sh"
 
 getDirSize() {
     local -n arr_ref="$1"
@@ -8,8 +9,6 @@ getDirSize() {
 }
 
 printColored() {
-    local color="\033[38;2;124;88;163m"  
-    local reset="\033[0m"
     printf "\n\n\n%b%s%b\n\n" "$color" "[ $1 ]" "$reset"  
     printf "%s\n" "$2"
 }
