@@ -24,7 +24,8 @@
 #           "var/log/rsync.log" 2026-9-17-11:0:0
 #
 # Browser Cache
-# Install tool later [done] 
+#
+# Caches taken from bleachbit debian
 clear
 src/print-summary.sh
 echo ; echo 
