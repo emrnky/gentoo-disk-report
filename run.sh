@@ -27,6 +27,9 @@
 #
 # Caches taken from bleachbit debian
 clear
-src/print-summary.sh
+
+shopt -s nullglob extglob
+source src/print-summary.sh
 echo ; echo 
-src/print-disk-usage.sh
+source src/print-disk-usage.sh
+shopt -u nullglob extglob

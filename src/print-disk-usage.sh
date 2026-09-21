@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 source "src/colors.sh"
+source "src/common.sh"
 # source : https://www.gilesorr.org/blog/disk-free-tui.html
 # filename: dft
-#fillCharacter="|"
-fillCharacter="$(echo -e "\e(0a\e(B")"
-emptyColor=$'\033[38;5;238m'
-reset=$'\033[0m'
 
 declare -A mppcent
 declare -A mpsize
@@ -19,17 +16,31 @@ do
     mpused["${mountpoint}"]="$( df --output=used -h "${mountpoint}" | tail -n +2 | tr -d ' ' )"
 done < <( echo "/" )
 # $COLUMNS isn't available in scripts, so:
-columns="$(tput cols)"
-
 for mp in "${!mppcent[@]}"
 do
-    echo "Disk Usage: ${mpused["${mp}"]}/${mpsize["${mp}"]}, ${mppcent["${mp}"]}%"
-    fillcols=$(( columns * ${mppcent["${mp}"]} / 100 ))
+    printf "$fmt" "Disk Usage" "${mpused["${mp}"]}/${mpsize["${mp}"]}, ${mppcent["${mp}"]}%"
+
+    fillcols=$(( barWidth * ${mppcent["${mp}"]} / 100 ))
+
+    cacheFillcols=0
+    if [[ -n "$grandTotal" ]] && (( grandTotal > 0 )); then
+        diskSizeBytes=$(df --output=size -B1 "${mp}" | tail -n +2 | tr -d ' ')
+        if (( diskSizeBytes > 0 )); then
+            cacheFillcols=$(( (barWidth * grandTotal + diskSizeBytes / 2) / diskSizeBytes ))
+            (( cacheFillcols == 0 )) && cacheFillcols=1
+            (( cacheFillcols > fillcols )) && cacheFillcols=$fillcols
+        fi
+    fi
+
     echo -en "${color}"
     i=1
-    while [ ${i} -le ${columns} ]
+    while [ ${i} -le ${barWidth} ]
     do
-        [ ${i} -eq $(( fillcols + 1 )) ] && echo -en "${emptyColor}"
+        if   [ ${i} -eq $(( fillcols - cacheFillcols + 1 )) ] && (( cacheFillcols > 0 )); then
+            echo -en "${cacheColor}"
+        elif [ ${i} -eq $(( fillcols + 1 )) ]; then
+            echo -en "${emptyColor}"
+        fi
         echo -n "${fillCharacter}"
         (( i++ ))
     done
