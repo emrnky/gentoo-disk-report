@@ -28,7 +28,7 @@ printCategory() {
         rows+=1
     done <<< "$data"
 
-    (( rows > 1 )) && printf "$fmt" "total" "$(bytesToHooman "$total")" || echo
+    (( rows > 1 )) && printf "$fmt" "Total" "~ $(bytesToHooman "$total")" || echo
     printf "\n"
 
     (( grandTotal += total ))
@@ -46,4 +46,5 @@ done
 
 printCategory "Web Browser Cache" "$browserCache"
 
-printf "\n%b%s%b %s\n" "$color" "[ Scanning finished ]" "$reset" "$(bytesToHooman "$grandTotal")"
+printf "\n%b%s%b %s\n" "$color" "[ Scanning finished ]" "$reset"
+printf "$fmt" "Potential cache size:" "~ $(bytesToHooman "$grandTotal")"
