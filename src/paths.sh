@@ -5,7 +5,7 @@ source "src/detect-journald.sh"
 source "src/detect-eclean.sh"
 
 # Later add a function for sanitization of overlapping glob patterns
-#
+# e.g.
 # $HOME/.cache/*
 # $HOME/.cache/**/*
 # $HOME/.cache/*.sh
