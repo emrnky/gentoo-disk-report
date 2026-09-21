@@ -5,4 +5,4 @@ getLogPath() {
 }
 
 
-mapfile -t logPaths < <(getLogPath)
+mapfile -t logrotatePaths < <(getLogPath)
