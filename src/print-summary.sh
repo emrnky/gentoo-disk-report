@@ -16,7 +16,6 @@ printCategory() {
     local title="$1" data="$2"
     local -i total=0 rows=0
     local size label
-    local fmt="  %-40s %s\n"
 
     [[ -z "$data" ]] && return
 
