@@ -33,7 +33,22 @@ for key in "${!pathGroups[@]}"; do
     mapfile -t "$key" <<< "${pathGroups[$key]}"
 done
 
-while read -r name state; do
-    [[ -z "$name" || "$name" == \#* ]] && continue
-    [[ "$state" != "false" ]] && pathArrayNames+=("$name")
-done < "$configFile"
+declare -A pathStates=()
+pathOrder=()
+
+readPathConfig() {
+    local cf="$1" name state
+    [[ -f "$cf" ]] || return
+    while read -r name state; do
+        [[ -z "$name" || "$name" == \#* ]] && continue
+        [[ -v pathStates["$name"] ]] || pathOrder+=("$name")
+        pathStates["$name"]="$state"
+    done < "$cf"
+}
+
+readPathConfig "$defaultConfigFile"
+readPathConfig "$userConfigFile"
+
+for name in "${pathOrder[@]}"; do
+    [[ "${pathStates[$name]}" != "false" ]] && pathArrayNames+=("$name")
+done
