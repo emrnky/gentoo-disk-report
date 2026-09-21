@@ -16,8 +16,6 @@ do
     mpused["${mountpoint}"]="$( df --output=used -h "${mountpoint}" | tail -n +2 | tr -d ' ' )"
 done < <( echo "/" )
 # $COLUMNS isn't available in scripts, so:
-barWidth=40
-
 for mp in "${!mppcent[@]}"
 do
     printf "$fmt" "Disk Usage" "${mpused["${mp}"]}/${mpsize["${mp}"]}, ${mppcent["${mp}"]}%"

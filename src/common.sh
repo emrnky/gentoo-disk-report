@@ -1,5 +1,8 @@
-cols="40"
-fmt="  %-${cols}s %s\n"
+col_1="40"
+col_2=20
+fmt="  %-${col_1}s %${col_2}s\n"
+barWidth=$(( col_1 + col_2 ))
+# fmt="  %-${cols}s %s\n"
 is_cmd(){ command -v "$1" >/dev/null 2>&1; }
 # Convert bytes to du format
 bytesToHooman() { numfmt --to=iec --format='%.1f' "$1"; }

@@ -23,7 +23,7 @@ printCategory() {
 
     while IFS=$'\t' read -r size label; do
         [[ -z "$size" ]] && continue
-        printf "$fmt" "$(truncatePath "$label")" "$(bytesToHooman "$size")"
+        printf "$fmt" "$(truncatePath "$label" "$col_1")" "$(bytesToHooman "$size")"
         total+=size
         rows+=1
     done <<< "$data"
