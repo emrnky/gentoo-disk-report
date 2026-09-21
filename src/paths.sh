@@ -4,10 +4,14 @@ source "src/detect-logrotate.sh"
 source "src/detect-journald.sh"
 source "src/detect-eclean.sh"
 
+# Later add a function for sanitization of overlapping glob patterns
+#
+# $HOME/.cache/*
+# $HOME/.cache/**/*
+# $HOME/.cache/*.sh
+
 declare -A pathGroups=(
     ["cachePaths"]="$HOME/.cache/*
-        $HOME/.cache/**/*
-        $HOME/.cache/*.sh
         $HOME/.thumbnails/*"
 
     ["historyPaths"]="$HOME/.bash_history
@@ -26,7 +30,6 @@ declare -A pathGroups=(
 pathArrayNames=()
 
 for key in "${!pathGroups[@]}"; do
-    pathArrayNames+=("$key")
     mapfile -t "$key" <<< "${pathGroups[$key]}"
 done
 
