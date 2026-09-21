@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 source "src/common.sh"
-getJournaldPath() {
+
+getJournaldPaths() {
     is_cmd journalctl || return
-    find /var/log/journal -name '*.journal' 2>/dev/null
+    LC_ALL=C journalctl --header 2>/dev/null | sed -n 's/^File path: //p'
 }
 
-mapfile -t journaldPaths < <(getJournaldPath)
-# journaldTotal 
-# journalctl --disk-usage | awk '{print $(NF-4)}' | numfmt --from=iec
+mapfile -t journaldPaths < <(getJournaldPaths)
