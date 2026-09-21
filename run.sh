@@ -29,7 +29,7 @@
 clear
 
 shopt -s nullglob extglob
-src/print-summary.sh
+source src/print-summary.sh
 echo ; echo 
-src/print-disk-usage.sh
+source src/print-disk-usage.sh
 shopt -u nullglob extglob
