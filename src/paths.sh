@@ -30,7 +30,7 @@ for key in "${!pathGroups[@]}"; do
     mapfile -t "$key" <<< "${pathGroups[$key]}"
 done
 
-pathArrayNames+=(logPaths)
-pathArrayNames+=(journaldPaths)
-pathArrayNames+=(ecleanPaths)
-pathArrayNames+=(ecleanKernelPaths)
+while read -r name state; do
+    [[ -z "$name" || "$name" == \#* ]] && continue
+    [[ "$state" != "false" ]] && pathArrayNames+=("$name")
+done < "$configFile"

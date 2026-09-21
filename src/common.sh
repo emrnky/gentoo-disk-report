@@ -1,9 +1,22 @@
+# Formatting
 col_1="40"
 col_2=20
 fmt="  %-${col_1}s %${col_2}s\n"
 barWidth=$(( col_1 + col_2 ))
 # fmt="  %-${cols}s %s\n"
 
+# Config 
+defaultConfigFile="default.conf"
+userConfigFile="$HOME/.config/gentoo-disk-report/dirs.conf"
+
+if [[ ! -f "$userConfigFile" ]]; then
+    mkdir -p "$(dirname "$userConfigFile")"
+    cp "$defaultConfigFile" "$userConfigFile"
+fi
+
+configFile="$userConfigFile"
+
+# Helpers
 is_cmd(){ command -v "$1" >/dev/null 2>&1; }
 
 bytesToHooman() { numfmt --to=iec --format='%.1f' "$1"; }
