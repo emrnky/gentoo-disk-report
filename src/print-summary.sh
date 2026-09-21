@@ -1,79 +1,50 @@
 #!/usr/bin/env bash
-
 source "src/paths.sh"
 source "src/detect-browser.sh"
-source "src/detect-journald.sh"
 source "src/colors.sh"
 source "src/common.sh"
 
 grandTotal=0
 
-grandTotal=$((grandTotal + journaldCache))
-
 getDirSize() {
-    local -n arr_ref="$1"
-    (( ${#arr_ref[@]} == 0 )) && return
-    du -c -b -d 0 "${arr_ref[@]}"
-}
-
-printColored() {
-    printf "\n\n\n%b%s%b\n\n" "$color" "[ $1 ]" "$reset"  
-    printf "%s\n" "${2:-[Warning]: Directories do not exist/not supported.}"
-}
-
-extractTotalBytes() {
-    tail -1 <<< "$1" | awk '{print $1}'
-}
-
-buildDisplay() {
-    while IFS=$'\t' read -r bytes path; do
-        printf "%-40s %s\n\n" "$path" "$(bytesToHooman "$bytes")"
-    done <<< "$1"
+    for path in "$@"; do
+        [ -e "$path" ] && du -b -d 0 "$path"
+    done
 }
 
 printCategory() {
-    local label="$1" arrName="$2" raw
-    raw=$(getDirSize "$arrName")
+    local title="$1" data="$2"
+    local -i total=0 rows=0
+    local size label
+    local fmt="  %-40s %s\n"
 
-    if [[ -z "$raw" ]]; then
-        printColored "$label" ""
-        return
-    fi
+    [[ -z "$data" ]] && return
 
-    grandTotal=$((grandTotal + $(extractTotalBytes "$raw")))
-    printColored "$label" "$(buildDisplay "$raw")"
+    printf "\n%b[ %s ]%b\n" "$color" "$title" "$reset"
+
+    while IFS=$'\t' read -r size label; do
+        [[ -z "$size" ]] && continue
+        printf "$fmt" "$label" "$(bytesToHooman "$size")"
+        total+=size
+        rows+=1
+    done <<< "$data"
+
+    (( rows > 1 )) && printf "$fmt" "total" "$(bytesToHooman "$total")" || echo
+    printf "\n"
+
+    (( grandTotal += total ))
 }
 
-browserCache=$(
-    for i in "${!browserNames[@]}"; do
-        [[ "${sizes[i]}" == "0.0" ]] && continue
-        printf "%-40s %s\n\n" "${browserNames[i]}" "${sizes[i]}"
-    done
-    printf "%-40s %s\n\n" "total" "$(bytesToHooman "$browserCacheTotal")"
-)
+printGroupSize() {
+    local -n ref="$1"
+    printCategory "$1" "$(getDirSize "${ref[@]}")"
+}
 
-grandTotal=$((grandTotal + browserCacheTotal))
+for arrname in "${pathArrayNames[@]}"; do
+    mapfile -t "$arrname" < <(expandGlob "$arrname")
+    printGroupSize "$arrname"
+done
 
-printCategory "Cache Directories" cachePaths
- 
-printCategory "History Files" historyPaths
- 
-printCategory "Mail Junk Files" mailJunkPaths
- 
-printCategory "App Log Files" appLogPaths
- 
-printCategory "Trash Directories" trashPaths
- 
-printCategory "Desktop Junk Directories" desktopJunkPaths
- 
-printCategory "Eclean Directories" ecleanPaths
- 
-printCategory "Eclean-Kernel Directories" ecleanKernelPaths
- 
-printCategory "Logrotate Directories" logPaths
- 
-printColored "Web Browser Cache" "$browserCache"
- 
-printColored "Journald Cache" "$(printf "%-40s %s\n\n" "total" "$(bytesToHooman $journaldCache)")"
+printCategory "Web Browser Cache" "$browserCache"
 
-printColored "Scanning finished..." "$(printf "%-40s %s\n\n" "total potential space" "$(bytesToHooman "$grandTotal")")"
+printf "\n%b%s%b %s\n" "$color" "[ Scanning finished ]" "$reset" "$(bytesToHooman "$grandTotal")"
