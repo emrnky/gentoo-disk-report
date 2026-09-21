@@ -20,11 +20,11 @@ printCategory() {
 
     [[ -z "$data" ]] && return
 
-    printf "\n%b[ %s ]%b\n" "$color" "$title" "$reset"
+    printf "\n%b[ %s ]%b\n" "$color" "$(camelToCaps "$title")" "$reset"
 
     while IFS=$'\t' read -r size label; do
         [[ -z "$size" ]] && continue
-        printf "$fmt" "$label" "$(bytesToHooman "$size")"
+        printf "$fmt" "$(truncatePath "$label")" "$(bytesToHooman "$size")"
         total+=size
         rows+=1
     done <<< "$data"
