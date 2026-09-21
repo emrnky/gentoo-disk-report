@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 source "src/detect-logrotate.sh"
-
-shopt -s nullglob extglob
+source "src/detect-journald.sh"
 
 declare -A pathGroups=(
     ["cachePaths"]="$HOME/.cache/*
+        $HOME/.cache/**/*
         $HOME/.cache/*.sh
         $HOME/.thumbnails/*"
 
@@ -27,9 +27,6 @@ declare -A pathGroups=(
         /usr/src/*"
 )
 
-pathArrayNames=(logPaths)
-
-
 expandGlob() {
     local -n arr_ref="$1"
     for entry in "${arr_ref[@]}"; do
@@ -39,14 +36,12 @@ expandGlob() {
     done
 }
 
+pathArrayNames=()
+
 for key in "${!pathGroups[@]}"; do
-    pathArrayNames+=("${key}Paths")
-    mapfile -t "${key}Paths" <<< "${pathGroups[$key]}"
+    pathArrayNames+=("$key")
+    mapfile -t "$key" <<< "${pathGroups[$key]}"
 done
 
-for arrname in "${pathArrayNames[@]}"; do
-    mapfile -t "$arrname" < <(expandGlob "$arrname")
-done
-
-
-shopt -u nullglob extglob
+pathArrayNames+=(logPaths)
+pathArrayNames+=(journaldPaths)
