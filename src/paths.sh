@@ -26,7 +26,7 @@ declare -A pathGroups=(
 pathArrayNames=()
 
 for key in "${!pathGroups[@]}"; do
-    pathArrayNames+=("$key")
+    # pathArrayNames+=("$key")
     mapfile -t "$key" <<< "${pathGroups[$key]}"
 done
 
