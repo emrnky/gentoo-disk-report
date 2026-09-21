@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 getLogPath() {
-    sudo cat /var/lib/misc/logrotate.status | awk -F'"' '{print $2}'
+    logrotate -d /etc/logrotate.conf 2>&1 | grep -oP '(?<=^considering log )\S+'
 }
 
 
