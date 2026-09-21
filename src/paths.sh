@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+source "src/common.sh"
 source "src/detect-logrotate.sh"
 source "src/detect-journald.sh"
+source "src/detect-eclean.sh"
 
 declare -A pathGroups=(
     ["cachePaths"]="$HOME/.cache/*
@@ -19,22 +21,7 @@ declare -A pathGroups=(
         $HOME/.recently-used
         $HOME/.recently-used.xbel
         $HOME/.local/share/recently-used.xbel"
-
-    ["ecleanPaths"]="/var/cache/binpkgs/*
-        /var/cache/distfiles/*"
-
-    ["ecleanKernelPaths"]="/lib/modules/*
-        /usr/src/*"
 )
-
-expandGlob() {
-    local -n arr_ref="$1"
-    for entry in "${arr_ref[@]}"; do
-        for match in $entry; do
-            echo "$match"
-        done
-    done
-}
 
 pathArrayNames=()
 
@@ -45,3 +32,5 @@ done
 
 pathArrayNames+=(logPaths)
 pathArrayNames+=(journaldPaths)
+pathArrayNames+=(ecleanPaths)
+pathArrayNames+=(ecleanKernelPaths)
