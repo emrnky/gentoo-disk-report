@@ -8,7 +8,7 @@ grandTotal=0
 
 getDirSize() {
     for path in "$@"; do
-        [ -e "$path" ] && du -b -d 0 "$path"
+        [ -e "$path" ] && du --block-size=1 -d 0 "$path"
     done
 }
 
