@@ -3,6 +3,7 @@ source "src/paths.sh"
 source "src/detect-browser.sh"
 source "src/colors.sh"
 source "src/common.sh"
+source "src/spinner.sh"
 
 grandTotal=0
 
@@ -36,7 +37,13 @@ printCategory() {
 
 printGroupSize() {
     local -n ref="$1"
-    printCategory "$1" "$(getDirSize "${ref[@]}")"
+    local tmp; tmp=$(mktemp)
+
+    getDirSize "${ref[@]}" > "$tmp" &
+    spinner "$!"
+
+    printCategory "$1" "$(cat "$tmp")"
+    rm -f "$tmp"
 }
 
 for arrname in "${pathArrayNames[@]}"; do
