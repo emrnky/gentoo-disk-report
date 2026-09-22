@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# https://www.commandinline.com/bash-script-progress-bar/
 set -euo pipefail
 
 spinner() {
