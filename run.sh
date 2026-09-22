@@ -26,9 +26,29 @@
 # Browser Cache
 #
 # Caches taken from bleachbit debian
-clear
+init-term() {
+	printf '\n' # ensure we have space for the scrollbar
+	  printf '\e7' # save the cursor location
+	    printf '\e[%d;%dr' 0 "$((LINES - 1))" # set the scrollable region (margin)
+	  printf '\e8' # restore the cursor location
+	printf '\e[1A' # move cursor up
+}
 
-shopt -s nullglob extglob
+deinit-term() {
+	printf '\e7' # save the cursor location
+	  printf '\e[%d;%dr' 0 "$LINES" # reset the scrollable region (margin)
+	  printf '\e[%d;%dH' "$LINES" 0 # move cursor to the bottom line
+	  printf '\e[0K' # clear the line
+	printf '\e8' # reset the cursor location
+}
+
+shopt -s nullglob extglob checkwinsize
+# Check winsize 
+(:)
+
+trap deinit-term exit
+trap init-term winch
+init-term
 source src/print-summary.sh
 echo ; echo 
 source src/print-disk-usage.sh
