@@ -1,6 +1,7 @@
 # Formatting
-col_1="40"
+# col_1=$COLUMNS
 col_2=20
+col_1=$(( COLUMNS - col_2 - 6 ))
 fmt="  %-${col_1}s %${col_2}s\n"
 barWidth=$(( col_1 + col_2 ))
 # fmt="  %-${cols}s %s\n"
